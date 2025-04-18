@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Caça ao Tesouro</title>
+  <style>
+    /* Fundo com a imagem de coelhinho da Páscoa fixa */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      padding: 30px;
+      background-image: url('https://th.bing.com/th/id/OIP.AYd5biuud476QpRRmczNewHaE8?rs=1&pid=ImgDetMain');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed; /* Mantém a imagem de fundo fixa */
+      color: #333;
+      transition: background 0.5s ease;
+      height: 100%;
+      min-height: 100vh; /* Garantir que o fundo ocupe toda a tela */
+      overflow: auto; /* Permite rolar o conteúdo */
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: white;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    input[type="password"] {
+      padding: 12px;
+      font-size: 18px;
+      width: 300px;
+      border-radius: 10px;
+      border: 2px solid #FF6347;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    input[type="password"]:focus {
+      border-color: #FFD700;
+      box-shadow: 0 0 10px #FFD700;
+      outline: none;
+    }
+
+    button {
+      padding: 12px 30px;
+      font-size: 18px;
+      margin-left: 10px;
+      cursor: pointer;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 10px;
+      transition: transform 0.2s, background-color 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    button:hover {
+      background-color: #45a049;
+      transform: scale(1.05);
+    }
+
+    button:active {
+      background-color: #3e8e41;
+      transform: scale(0.98);
+    }
+
+    img {
+      margin: 10px;
+      max-width: 50%;
+      height: auto;
+      display: none;
+      border-radius: 10px;
+      border: 2px solid #FF6347;
+      transition: opacity 1s ease, transform 1s ease;
+      opacity: 0;
+    }
+
+    img.show {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    #mensagem {
+      font-size: 20px;
+      margin-top: 15px;
+      color: #cc0000;
+      font-weight: bold;
+    }
+
+    #mensagemFinal {
+      font-size: 24px;
+      color: #228B22;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Jogo de Caça ao Tesouro do ENZO e da MARIA</h1>
+  <p>Digite a senha para revelar o próximo mapa:</p>
+
+  <input type="password" id="campoSenha" placeholder="Digite a senha" />
+  <button onclick="verificarSenha()">Enviar</button>
+
+  <p id="mensagem"></p>
+
+  <div>
+    <img id="imagem1" src="" alt="Mapa parte 1" />
+    <img id="imagem2" src="" alt="Mapa parte 2" />
+    <p id="mensagemFinal"></p>
+  </div>
+
+  <script>
+    const etapas = [
+      { senha: "inicio123", imagem1: "mapa1a.jpg", imagem2: "mapa1b.jpg" },
+      { senha: "enzoprincipe", imagem1: "mapa2a.jpg", imagem2: "mapa2b.jpg" },
+      { senha: "mariaprincesa", imagem1: "mapa3a.jpg", imagem2: "mapa3b.jpg" },
+      { senha: "tioraphaellindo", imagem1: "mapa4a.jpg", imagem2: "mapa4b.jpg" },
+      { senha: "pituco", imagem1: "mapa5a.jpg", imagem2: "mapa5b.jpg" },
+      { senha: "pituca", imagem1: "mapa6a.jpg", imagem2: "mapa6b.jpg" },
+      { senha: "mamaeama", imagem1: "mapa7a.jpg", imagem2: "mapa7b.jpg" },
+      { senha: "marcirainha", imagem1: "tesouro1.jpg", imagem2: "tesouro2.jpg" } // Tesouro por último!
+    ];
+
+    let etapaAtual = 0;
+    const campoSenha = document.getElementById("campoSenha");
+    const imagem1 = document.getElementById("imagem1");
+    const imagem2 = document.getElementById("imagem2");
+    const mensagem = document.getElementById("mensagem");
+    const mensagemFinal = document.getElementById("mensagemFinal");
+
+    function verificarSenha() {
+      const senha = campoSenha.value.trim();
+
+      if (etapaAtual >= etapas.length) return;
+
+      if (senha === "") {
+        mensagem.textContent = "Por favor, digite uma senha!";
+        return;
+      }
+
+      const etapa = etapas[etapaAtual];
+
+      if (senha === etapa.senha) {
+        imagem1.src = etapa.imagem1;
+        imagem2.src = etapa.imagem2;
+
+        imagem1.style.display = "inline";
+        imagem2.style.display = "inline";
+
+        setTimeout(() => {
+          imagem1.classList.add("show");
+          imagem2.classList.add("show");
+        }, 100);
+
+        mensagem.textContent = "";
+        campoSenha.value = "";
+        etapaAtual++;
+
+        if (etapaAtual === etapas.length) {
+          mensagemFinal.textContent = "🎉 Parabéns! Você encontrou o tesouro escondido!";
+          campoSenha.disabled = true;
+        }
+      } else {
+        mensagem.textContent = "Senha incorreta. Tente novamente.";
+      }
+    }
+
+    // Permitir envio com Enter
+    campoSenha.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        verificarSenha();
+      }
+    });
+  </script>
+</body>
+</html>
